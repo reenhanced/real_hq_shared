@@ -7,5 +7,10 @@ class NestedOstruct
   end
 end
                                                                   
-config_file = Rails.root.join('config', 'config.yml')
-Configs = HashWithIndifferentAccess.new(YAML.load_file(config_file)) if File.exists?(config_file)
+config_file = Rails.root.join('config', 'config.yml')                
+
+if File.exists?(config_file)
+  Configs = HashWithIndifferentAccess.new(YAML.load_file(config_file)) 
+else
+  puts "Configs object not created because config/config.yml does not exist. Create this file if you would like to use Configs." 
+end
