@@ -1,13 +1,14 @@
-RealhqShared
+Real HQ Shared
+==============
+
+Code that is shared across Real HQ apps.
+
+
+Installation
 ============
-
-Introduction goes here.
-
-
-Example
-=======
-
-Example goes here.
+                  
+cd /path/to/project
+git submodule add git@github.com:RealHQ/real_hq_shared.git vendor/plugins/real_hq_shared
 
 
-Copyright (c) 2011 [name of plugin creator], released under the MIT license
+Copyright (c) 2011 Real HQ
