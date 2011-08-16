@@ -57,6 +57,15 @@ if Configs[:campfire] && Configs[:campfire][:subdomain] && Configs[:campfire][:u
       def message(message)
         send_message message
       end
+      
+      def message_with_highlight(message)
+        message_id = send_message message
+        highlight_message message_id
+      end                           
+      
+      def highlight_message(message_id)
+        post 'highlight', :message_id => message_id
+      end
 
       def paste(paste)
         send_message paste, 'PasteMessage'
@@ -73,21 +82,41 @@ if Configs[:campfire] && Configs[:campfire][:subdomain] && Configs[:campfire][:u
       private
 
       def send_message(message, type = 'Textmessage')
-        post 'speak', :body => {:message => {:body => message, :type => type}}.to_json
+        response = (post 'speak', :body => {:message => {:body => message, :type => type}}.to_json).parsed_response
+        response.is_a?(Hash) && response["message"] ? response["message"]["id"] : response
       end
 
       def get(action, options = {})
-        Campfire.get room_url_for(action), options
+        Campfire.get campfire_url_for(action), options
       end
 
-      def post(action, options = {})
-        Campfire.post room_url_for(action), options
+      def post(action, options = {})          
+        arg = options.delete(:message_id)
+        Campfire.post campfire_url_for(action, arg), options
       end
 
-      def room_url_for(action)
-        "/room/#{room_id}/#{action}.json"
+      def campfire_url_for(action, arg = nil)
+        case action
+        when "highlight"  
+          "/messages/#{arg}/star.json"
+        else
+          "/room/#{room_id}/#{action}.json"
+        end
       end
     end  
     
   end
 end
+
+# Usage:
+#
+# room = Campfire.room(1)
+# room.join
+# room.lock
+# 
+# room.message 'This is a top secret'
+# room.paste "FROM THE\n\nAP-AYE"
+# room.play_sound 'rimshot'
+# 
+# room.unlock
+# room.leave
