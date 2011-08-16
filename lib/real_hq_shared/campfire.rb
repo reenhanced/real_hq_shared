@@ -115,6 +115,7 @@ end
 # room.lock
 # 
 # room.message 'This is a top secret'
+# room.message_with_highlight 'Check this out!'
 # room.paste "FROM THE\n\nAP-AYE"
 # room.play_sound 'rimshot'
 # 
