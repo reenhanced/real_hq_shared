@@ -4,6 +4,7 @@ if Configs[:campfire] && Configs[:campfire][:subdomain] && Configs[:campfire][:u
   
   http_client = begin
     require 'httparty'
+    true
   rescue MissingSourceFile
     puts "HTTParty gem not installed. Please add it to your application Gemfile to use Campfire."
     false
