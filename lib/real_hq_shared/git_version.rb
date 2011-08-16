@@ -1,1 +1,1 @@
-Rails.application.config.version = `git describe --tags --always --dirty`.chomp
+Rails.application.config.version = `git describe --tags --always`.chomp
