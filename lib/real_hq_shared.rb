@@ -6,5 +6,5 @@ require 'real_hq_shared/shared_helper.rb'
 require 'real_hq_shared/try_chain.rb'                                        
 
 class ActionView::Base
-  include RealHqShared
+  include ActionView::Helpers::RealHqShared
 end
