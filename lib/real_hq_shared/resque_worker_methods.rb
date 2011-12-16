@@ -9,9 +9,7 @@ module RealHqShared
     module WorkerClassMethods 
       
       def set_log log_name
-        log_filedir     = File.expand_path('../../../log/', __FILE__)
-        log_filename    = "#{log_name}.log"
-        log_filepath    = log_filedir + "/" + log_filename  
+        log_filepath    = File.join(Rails.root, 'log', "#{log_name}.log")
         @log_file       = File.open(log_filepath, "a") 
       end                            
 
