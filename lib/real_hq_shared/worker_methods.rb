@@ -34,7 +34,11 @@ module RealHqShared
       end
       
       def handle_exception ex
-        notify_airbrake(ex) rescue nil
+        if Rails.env.development?
+          raise ex
+        else
+          notify_airbrake(ex) rescue nil
+        end
         log_exception ex
       end
       
