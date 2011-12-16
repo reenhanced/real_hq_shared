@@ -1,6 +1,6 @@
 module RealHqShared
 
-  module WorkerMethods
+  module ResqueWorkerMethods
     
     def self.included worker
       worker.extend(WorkerClassMethods)
