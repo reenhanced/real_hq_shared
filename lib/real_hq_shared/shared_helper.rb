@@ -9,7 +9,14 @@ module ActionView
         javascript_tag do 
           %Q(google.load('#{library}', '#{version}');)
         end
-      end          
+      end         
+
+      def google_conversion_code label, options={}
+        # This is in a hidden div, otherwise it adds 13px of white space to the page
+        content_tag :div, :style=>"display:none;" do
+          js_for_google_conversion "n7irCO64qgIQxoLC5QM", :color => "666666"
+        end
+      end
   
       def js_for_google_conversion label, options={}
         options[:id]        ||= Configs[:google_conversion_id]
