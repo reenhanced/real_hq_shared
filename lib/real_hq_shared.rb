@@ -4,7 +4,6 @@ require 'real_hq_shared/git_version.rb'
 require 'real_hq_shared/mailer.rb'
 require 'real_hq_shared/shared_helper.rb'
 require 'real_hq_shared/try_chain.rb'
-require 'real_hq_shared/worker_methods.rb'
 
 ActionView::Base.send       :include, ActionView::Helpers::RealHqShared
             
