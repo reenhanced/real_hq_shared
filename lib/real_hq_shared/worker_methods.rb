@@ -37,7 +37,7 @@ module RealHqShared
         if Rails.env.development?
           raise ex
         else
-          notify_airbrake(ex) rescue nil
+          notify_airbrake ex
         end
         log_exception ex
       end
