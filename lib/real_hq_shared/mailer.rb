@@ -18,9 +18,13 @@ module RealHqShared
           # This allows us to set an error flash message or take some 
           # other action in case of an ActionMailer exception.
           if Rails.env.production? || Rails.env.staging?
-            notify_airbrake(ex) rescue nil
+            if respond_to? "notify_airbrake"
+              notify_airbrake(ex) rescue nil
+            else
+              Airbrake.notify(ex) rescue nil
+            end
             yield if block_given?
-            true
+            false
           else
             raise ex
           end
