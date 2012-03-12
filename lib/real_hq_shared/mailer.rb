@@ -13,10 +13,10 @@ module RealHqShared
         # end
         begin
           mailer.send(email,*args).deliver
-        rescue Exception => ex
-          # Yields to the block (if provided) if an exception occurs. 
+        rescue Exception
+          # Yields to the block (if provided) if an error occurs. 
           # This allows us to set an error flash message or take some 
-          # other action in case of an ActionMailer exception.
+          # other action in case of an ActionMailer error.
           if Rails.env.production? || Rails.env.staging?
             if respond_to? "notify_airbrake"
               notify_airbrake(ex) rescue nil
@@ -26,7 +26,13 @@ module RealHqShared
             yield if block_given?
             false
           else
-            raise ex
+            # Don't raise exception in development or test if there's 
+            # no internet connection. Otherwise, raise the exception. 
+            if ex.is_a?(SocketError)
+              Rails.logger.error "SocketError - mail not delivered."
+            else
+              raise ex
+            end
           end
         end
       end
