@@ -13,7 +13,7 @@ module RealHqShared
         # end
         begin
           mailer.send(email,*args).deliver
-        rescue Exception
+        rescue Exception => ex
           # Yields to the block (if provided) if an error occurs. 
           # This allows us to set an error flash message or take some 
           # other action in case of an ActionMailer error.
