@@ -1,9 +1,8 @@
-require 'real_hq_shared/configuration.rb' # Load configuration.rb first so that Configs object is available to other mixins
-require 'real_hq_shared/campfire.rb'
-require 'real_hq_shared/git_version.rb'
-require 'real_hq_shared/mailer.rb'
-require 'real_hq_shared/shared_helper.rb'
-require 'real_hq_shared/try_chain.rb'
+# Load configuration.rb first so that Configs object is available to other mixins
+required_files = ["configuration"]
+required_files += %w(campfire git_version mailer shared_helper try_chain.rb)
+
+required_files.each { |file| require File.dirname(__FILE__) + '/real_hq_shared/' + file } 
 
 ActionView::Base.send       :include, ActionView::Helpers::RealHqShared
             
