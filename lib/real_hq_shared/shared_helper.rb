@@ -5,10 +5,21 @@ module ActionView
     module RealHqShared
        
       ### Javascript helpers          
-      def js_from_google library, version
-        javascript_tag do 
-          %Q(google.load('#{library}', '#{version}');)
+      def js_from_google libraries_and_versions # hash i.e. { :jquery => "1" }
+        if libraries_and_versions.size > 1
+          js = javascript_include_tag("http://www.google.com/jsapi")
+          libraries_and_versions.each do |library, version|
+            js += javascript_tag %Q(google.load('#{library}', '#{version}');)
+          end
+        else
+          url = case library.to_s
+                when "jquery" then "http://ajax.googleapis.com/ajax/libs/jquery/#{version}/jquery.min.js"
+                # add more cases if necessary
+                end
+
+          js = javascript_include_tag url
         end
+        return js
       end         
 
       def google_conversion_code label, options={}
