@@ -45,7 +45,7 @@ module ActionView
   
       def js_for_typekit js_file=nil
         js_file ||= Configs[:typekit_js_file]
-        javascript_include_tag(js_file) + 
+        javascript_include_tag(js_file.match(/http(s)?:\/\//) ? js_file : "http://use.typekit.com/#{js_file}") + 
         javascript_tag("try{Typekit.load();}catch(e){}")
       end   
   
