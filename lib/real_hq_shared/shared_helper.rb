@@ -12,6 +12,8 @@ module ActionView
             js += javascript_tag %Q(google.load('#{library}', '#{version}');)
           end
         else
+          library = libraries_and_versions.flatten[0]
+          version = libraries_and_versions.flatten[1]
           url = case library.to_s
                 when "jquery" then "http://ajax.googleapis.com/ajax/libs/jquery/#{version}/jquery.min.js"
                 # add more cases if necessary
