@@ -3,6 +3,10 @@ module RealHqShared
   module Mailer
     
     extend ActiveSupport::Concern
+
+    def safely_deliver mailer, email, *args, &block   
+      self.class.safely_deliver mailer, email, *args, &block
+    end  
     
     module ClassMethods
 
@@ -38,11 +42,7 @@ module RealHqShared
       end
           
     end
-    
-    def safely_deliver mailer, email, *args, &block   
-      self.class.safely_deliver mailer, email, *args, &block
-    end  
-
+  
   end
   
 end
