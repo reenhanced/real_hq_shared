@@ -5,10 +5,23 @@ module ActionView
     module RealHqShared
        
       ### Javascript helpers          
-      def js_from_google library, version
-        javascript_tag do 
-          %Q(google.load('#{library}', '#{version}');)
+      def js_from_google libraries_and_versions # hash i.e. { :jquery => "1" }
+        if libraries_and_versions.size > 1
+          js = javascript_include_tag("http://www.google.com/jsapi")
+          libraries_and_versions.each do |library, version|
+            js += javascript_tag %Q(google.load('#{library}', '#{version}');)
+          end
+        else
+          library = libraries_and_versions.flatten[0]
+          version = libraries_and_versions.flatten[1]
+          url = case library.to_s
+                when "jquery" then "http://ajax.googleapis.com/ajax/libs/jquery/#{version}/jquery.min.js"
+                # add more cases if necessary
+                end
+
+          js = javascript_include_tag url
         end
+        return js
       end         
 
       def google_conversion_code label, options={}
@@ -43,8 +56,9 @@ module ActionView
         end
       end                   
   
-      def js_for_typekit 
-        javascript_include_tag(Configs[:typekit_js_file]) + 
+      def js_for_typekit js_file=nil
+        js_file ||= Configs[:typekit_js_file]
+        javascript_include_tag(js_file.match(/http(s)?:\/\//) ? js_file : "http://use.typekit.com/#{js_file}") + 
         javascript_tag("try{Typekit.load();}catch(e){}")
       end   
   
