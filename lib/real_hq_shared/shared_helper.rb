@@ -5,9 +5,9 @@ module ActionView
     module RealHqShared
        
       ### Javascript helpers          
-      def js_from_google libraries_and_versions # hash i.e. { :jquery => "1" }
+      def js_from_google libraries_and_versions, ssl=false # hash i.e. { :jquery => "1" }
         if libraries_and_versions.size > 1
-          js = javascript_include_tag("http://www.google.com/jsapi")
+          js = javascript_include_tag("#{request.protocol}www.google.com/jsapi")
           libraries_and_versions.each do |library, version|
             js += javascript_tag %Q(google.load('#{library}', '#{version}');)
           end
@@ -15,7 +15,7 @@ module ActionView
           library = libraries_and_versions.flatten[0]
           version = libraries_and_versions.flatten[1]
           url = case library.to_s
-                when "jquery" then "http://ajax.googleapis.com/ajax/libs/jquery/#{version}/jquery.min.js"
+                when "jquery" then "#{request.protocol}ajax.googleapis.com/ajax/libs/jquery/#{version}/jquery.min.js"
                 # add more cases if necessary
                 end
 
@@ -58,7 +58,7 @@ module ActionView
   
       def js_for_typekit js_file=nil
         js_file ||= Configs[:typekit_js_file]
-        javascript_include_tag(js_file.match(/http(s)?:\/\//) ? js_file : "http://use.typekit.com/#{js_file}") + 
+        javascript_include_tag(js_file.match(/http(s)?:\/\//) ? js_file : "#{request.protocol}use.typekit.com/#{js_file}") + 
         javascript_tag("try{Typekit.load();}catch(e){}")
       end   
   
@@ -77,7 +77,7 @@ module ActionView
           #{form_name}.display();".html_safe
         end
       end
-          
+
     end
     
   end
