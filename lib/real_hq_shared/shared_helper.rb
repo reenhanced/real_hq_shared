@@ -64,8 +64,8 @@ module ActionView
   
       def js_for_wufoo_form form_name, options={}
         form_name    = form_name.camelcase(:lower)  
-        ssl          = options[:ssl] || false
-        form_options = {:user_name => "realhq", :form_hash => "#{form_name}", :auto_resize => false, :ssl => ssl}.merge(options)
+        ssl          = request.protocol == "https://" ? true : false
+        form_options = { user_name: "realhq", form_hash: "#{form_name}", auto_resize: false, ssl: ssl}.merge(options)
         json_options = form_options.inject({}){|o,(k,v)| o[k.to_s.camelcase(:lower)] = v; o}.to_json
        
         javascript_tag do                                                                                                                                                                                                      
