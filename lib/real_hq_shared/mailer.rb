@@ -3,6 +3,10 @@ module RealHqShared
   module Mailer
     
     extend ActiveSupport::Concern
+
+    def safely_deliver mailer, email, *args, &block   
+      self.class.safely_deliver mailer, email, *args, &block
+    end  
     
     module ClassMethods
 
@@ -13,7 +17,7 @@ module RealHqShared
         # end
         begin
           mailer.send(email,*args).deliver
-        rescue Exception => ex
+        rescue => ex
           # Yields to the block (if provided) if an error occurs. 
           # This allows us to set an error flash message or take some 
           # other action in case of an ActionMailer error.
@@ -38,11 +42,7 @@ module RealHqShared
       end
           
     end
-    
-    def safely_deliver mailer, email, *args, &block   
-      self.class.safely_deliver mailer, email, *args, &block
-    end  
-
+  
   end
   
 end
