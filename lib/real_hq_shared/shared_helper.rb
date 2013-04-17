@@ -3,8 +3,8 @@ module ActionView
   module Helpers
 
     module RealHqShared
-       
-      ### Javascript helpers          
+
+      ### Javascript helpers
       def js_from_google libraries_and_versions, ssl=false # hash i.e. { :jquery => "1" }
         if libraries_and_versions.size > 1
           js = javascript_include_tag("#{request.protocol}www.google.com/jsapi")
@@ -22,7 +22,7 @@ module ActionView
           js = javascript_include_tag url
         end
         return js
-      end         
+      end
 
       def google_conversion_code label, options={}
         # This is in a hidden div, otherwise it adds 13px of white space to the page
@@ -30,14 +30,14 @@ module ActionView
           js_for_google_conversion label, options
         end
       end
-  
+
       def js_for_google_conversion label, options={}
-        options[:id]        ||= Configs[:google_conversion_id]
+        options[:id]        ||= Configs.google_analytics.conversion_id
         options[:language]  ||= "en"
         options[:format]    ||= "3"
         options[:color]     ||= "ffffff"
         options[:value]     ||= 0
-    
+
         javascript_tag do
           %Q(
           var google_conversion_id       = #{options[:id]};
@@ -47,31 +47,31 @@ module ActionView
           var google_conversion_label    = \"#{label}\";
           var google_conversion_value    = #{options[:value]};
           ).html_safe
-        end + 
-        javascript_include_tag(Configs[:google_conversion_js_file]) +
+        end +
+        javascript_include_tag(Configs.google_analytics.conversion_js_file) +
         content_tag(:noscript) do
           content_tag(:div, :style => "display:inline;") do
             image_tag "http://www.googleadservices.com/pagead/conversion/#{options[:id]}/?label=#{label}&guid=ON&script=0", :height=>"1", :width=>"1", :style=>"border-style:none;", :alt=>""
           end
         end
-      end                   
-  
+      end
+
       def js_for_typekit js_file=nil
         js_file ||= Configs[:typekit_js_file]
-        javascript_include_tag(js_file.match(/http(s)?:\/\//) ? js_file : "#{request.protocol}use.typekit.com/#{js_file}") + 
+        javascript_include_tag(js_file.match(/http(s)?:\/\//) ? js_file : "#{request.protocol}use.typekit.com/#{js_file}") +
         javascript_tag("try{Typekit.load();}catch(e){}")
-      end   
-  
+      end
+
       def js_for_wufoo_form form_name, options={}
-        form_name    = form_name.camelcase(:lower)  
+        form_name    = form_name.camelcase(:lower)
         ssl          = request.protocol == "https://" ? true : false
         form_options = { user_name: "realhq", form_hash: "#{form_name}", auto_resize: false, ssl: ssl}.merge(options)
         json_options = form_options.inject({}){|o,(k,v)| o[k.to_s.camelcase(:lower)] = v; o}.to_json
-       
-        javascript_tag do                                                                                                                                                                                                      
+
+        javascript_tag do
           "var host = ((\"https:\" == document.location.protocol) ? \"https://secure.\" : \"http://\");document.write(unescape(\"%3Cscript src='\" + host + \"wufoo.com/scripts/embed/form.js' type='text/javascript'%3E%3C/script%3E\"));".html_safe
         end +
-        javascript_tag do                                                                                                                                                                                                      
+        javascript_tag do
           "var #{form_name} = new WufooForm();
           #{form_name}.initialize(#{json_options});
           #{form_name}.display();".html_safe
@@ -79,7 +79,7 @@ module ActionView
       end
 
     end
-    
+
   end
-  
+
 end
