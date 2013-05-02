@@ -6,20 +6,9 @@ module RealHqShared
 
     included do
 
-      if self < ActiveRecord::Base
-
-        extend CommonMethods
-        extend ActiveRecordClassMethods
-
-      elsif self < ActionController::Base
-
-        include CommonMethods
-
-      end
-
     end
 
-    module CommonMethods
+    module ClassMethods
 
       def sanitize_phone_number number
         number = (number || "").to_s
@@ -39,10 +28,6 @@ module RealHqShared
 
         return number
       end
-
-    end # CommonMethods
-
-    module ActiveRecordClassMethods
 
       def phone_numbers(*attrs)
         unless attrs.empty?
@@ -93,7 +78,7 @@ module RealHqShared
         end
       end # currency_numbers
 
-    end # ActiveRecordClassMethods
+    end # ClassMethods
 
   end
 
