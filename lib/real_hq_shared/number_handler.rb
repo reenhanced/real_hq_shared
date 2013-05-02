@@ -66,7 +66,8 @@ module RealHqShared
               dollar_setter_method = "#{dollar_method}=".to_sym
 
               send :define_method, dollar_method do
-                (send(att) || 0) / 100.0
+                cents_val = send(att)
+                cents_val / 100.0 if cents_val
               end
 
               send :define_method, dollar_setter_method do |val|
