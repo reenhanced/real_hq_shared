@@ -85,7 +85,7 @@ module RealHqShared
                     when [Date,DateTime,Time].include?(original_date.class) || original_date.nil?
                       original_date
                     else
-                      Time.strptime(original_date, options[:format] || "%m/%d/%Y").utc.to_date
+                      original_date.present? ? Time.strptime(original_date, options[:format] || "%m/%d/%Y").utc.to_date : nil
                     end
 
             self[att.to_sym] = date
