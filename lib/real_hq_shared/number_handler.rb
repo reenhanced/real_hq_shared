@@ -1,6 +1,6 @@
 module RealHqShared
 
-  module StringHandler
+  module NumberHandler
 
     extend ActiveSupport::Concern
 
@@ -82,10 +82,10 @@ module RealHqShared
           setter_method = ("#{att.to_s}=").to_sym
           send :define_method, setter_method do |original_date|
             date =  case
-                    when [Date,DateTime].include?(original_date.class) || original_date.nil?
+                    when [Date,DateTime,Time].include?(original_date.class) || original_date.nil?
                       original_date
                     else
-                      Time.strptime(original_date, options[:format] || "%m/%e/%Y").utc.to_date
+                      Time.strptime(original_date, options[:format] || "%m/%d/%Y").utc.to_date
                     end
 
             self[att.to_sym] = date

@@ -4,8 +4,8 @@ required_files = ["configuration"]
 required_files += %w(
 	git_version
 	mailer
+  number_handler
 	shared_helper
-  string_handler
 )
 
 required_files.each { |file| require File.dirname(__FILE__) + '/real_hq_shared/' + file }
