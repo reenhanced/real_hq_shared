@@ -76,6 +76,8 @@ module RealHqShared
       end # currency_numbers
 
       def dates(*attrs)
+        options = attrs.extract_options!
+
         attrs.each do |att|
           setter_method = ("#{att.to_s}=").to_sym
           send :define_method, setter_method do |original_date|
@@ -83,7 +85,7 @@ module RealHqShared
                     when [Date,DateTime].include?(original_date.class) || original_date.nil?
                       original_date
                     else
-                      Time.strptime(original_date, I18n.t('date.formats.mmddyyyy', default: "%m/%e/%Y")).utc.to_date
+                      Time.strptime(original_date, options[:format] || "%m/%e/%Y").utc.to_date
                     end
 
             self[att.to_sym] = date
