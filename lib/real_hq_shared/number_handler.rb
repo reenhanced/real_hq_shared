@@ -67,8 +67,8 @@ module RealHqShared
               cents_val / 100.0 if cents_val
             end
 
-            send :define_method, dollar_setter_method do |val|
-              send(setter_method, val.to_f * 100)
+            send :define_method, dollar_setter_method do |dollar_val|
+              send(setter_method, dollar_val.to_f * 100) if dollar_val
             end
 
           end
