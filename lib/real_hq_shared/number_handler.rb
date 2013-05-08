@@ -26,6 +26,7 @@ module RealHqShared
         number = number.split("to").first || ""
         number.gsub!(/[^0-9|.][.]?/,'')
 
+
         return number if number.present?
       end
 
@@ -68,6 +69,7 @@ module RealHqShared
             end
 
             send :define_method, dollar_setter_method do |dollar_val|
+              dollar_val = self.class.sanitize_number_string(dollar_val)
               send(setter_method, dollar_val.to_f * 100) if dollar_val.present?
             end
 
