@@ -6,7 +6,7 @@ Code that is shared across Real HQ apps.
 
 Installation
 ============
-                  
+
 cd /path/to/project
 git submodule add git@github.com:RealHQ/real_hq_shared.git vendor/plugins/real_hq_shared
 
