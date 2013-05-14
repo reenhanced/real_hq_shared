@@ -2,6 +2,8 @@ module RealHqShared
 
   module NumberHandler
 
+    class InvalidAttribute < Exception ; end
+
     extend ActiveSupport::Concern
 
     included do
@@ -32,8 +34,7 @@ module RealHqShared
 
       def phone_numbers(*attrs)
         attrs.each do |att|
-          setter_method = ("#{att.to_s}=").to_sym
-          send :define_method, setter_method do |number|
+          send :define_method, setter_method_for_attribute(att) do |number|
             self[att.to_sym] = self.class.sanitize_phone_number(number)
           end
         end
@@ -45,8 +46,7 @@ module RealHqShared
           att, units = *att
           att = att.to_s
 
-          setter_method = "#{att}=".to_sym
-          send :define_method, setter_method do |string|
+          send :define_method, setter_method_for_attribute(att) do |string|
             self[att.to_sym] = self.class.sanitize_number_string(string)
           end
 
@@ -81,8 +81,7 @@ module RealHqShared
         options = attrs.extract_options!
 
         attrs.each do |att|
-          setter_method = ("#{att.to_s}=").to_sym
-          send :define_method, setter_method do |original_date|
+          send :define_method, setter_method_for_attribute(att) do |original_date|
             date =  case
                     when [Date,DateTime,Time].include?(original_date.class) || original_date.nil?
                       original_date
@@ -94,6 +93,24 @@ module RealHqShared
           end
         end
       end # dates
+
+      private
+
+      def setter_method_for_attribute(attribute)
+
+        # this method is called before Rails automatically defines attribute methods.
+        define_attribute_methods
+
+        setter_method = ("#{attribute.to_s}=").to_sym
+
+        case
+        when self.instance_methods(true).include?(setter_method)
+          setter_method
+        else
+          # raise an exception if there isn't a setter method to override
+          raise InvalidAttribute.new("#{attribute} not a valid attribute")
+        end
+      end
 
     end # ClassMethods
 
