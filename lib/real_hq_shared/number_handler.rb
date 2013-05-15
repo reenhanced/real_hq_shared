@@ -46,7 +46,9 @@ module RealHqShared
           att, units = *att
           att = att.to_s
 
-          send :define_method, setter_method_for_attribute(att) do |string|
+          setter_method = setter_method_for_attribute(att)
+
+          send :define_method, setter_method do |string|
             self[att.to_sym] = self.class.sanitize_number_string(string)
           end
 
