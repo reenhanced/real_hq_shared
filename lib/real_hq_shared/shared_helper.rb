@@ -25,8 +25,10 @@ module ActionView
       end
 
       def google_conversion_code label, options={}
+        label = Configs.google_analytics.conversion_labels.send(label) if label.is_a?(Symbol)
+
         # This is in a hidden div, otherwise it adds 13px of white space to the page
-        content_tag :div, :style=>"display:none;" do
+        content_tag :div, style: "display:none;" do
           js_for_google_conversion label, options
         end
       end
