@@ -5,7 +5,6 @@ require 'active_model'
 class NumberHandlerTest < ActiveSupport::TestCase
   def setup
     @number_handled = Class.new do
-      include ActiveModel::AttributeMethods # For self[:attribute] support
       include RealHqShared::NumberHandler
 
       attr_accessor :office_phone, :home_phone, :price, :price_dollars, :price_cents
