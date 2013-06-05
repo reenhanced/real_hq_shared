@@ -99,10 +99,6 @@ module RealHqShared
       private
 
       def setter_method_for_attribute(attribute)
-
-        # this method is called before Rails automatically defines attribute methods.
-        define_attribute_methods
-
         setter_method = ("#{attribute.to_s}=").to_sym
 
         case
