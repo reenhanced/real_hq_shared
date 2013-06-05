@@ -3,6 +3,8 @@ Real HQ Shared
 
 Code that is shared across Real HQ apps.
 
+Requires Rails 3.2.x
+
 
 Installation
 ============
