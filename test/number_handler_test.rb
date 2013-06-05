@@ -50,9 +50,8 @@ class NumberHandlerTest < ActiveSupport::TestCase
 
   ## .sanitize_number_string
 
-  test ".sanitize_number_string returns Number objects unmodified" do
+  test ".sanitize_number_string non-String objects unmodified" do
     number = 51
-    assert_kind_of(Fixnum, 51)
 
     assert_same(@number_handled.sanitize_number_string(number), number)
   end
@@ -78,7 +77,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
     assert_equal(@number_handled.sanitize_number_string(number_string), expected)
   end
 
-  test ".sanitize_number_string returns nil is the string doesn't contain numbers" do
+  test ".sanitize_number_string returns nil if the string doesn't contain numbers" do
     number_string = "Expert ruby coders love writing great code"
 
     assert_nil(@number_handled.sanitize_number_string(number_string))
