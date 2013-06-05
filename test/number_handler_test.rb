@@ -9,6 +9,13 @@ class NumberHandlerTest < ActiveSupport::TestCase
 
       attr_accessor :office_phone, :home_phone, :price, :price_cents, :test_date
 
+      # Based on https://github.com/rails/rails/blob/28574961fb5a6cdc7cdf420e1e3694653619bb5b/activerecord/lib/active_record/attribute_assignment.rb#L42
+      def initialize(attributes = {})
+        attributes.each do |name, value|
+          send("#{name}=", value)
+        end
+      end
+
       def []=(attribute, value)
         instance_variable_set("@#{attribute}", value)
       end
@@ -91,10 +98,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
     phone_number = "866.237.6836"
     sanitized_phone_number = @number_handled.sanitize_phone_number(phone_number)
 
-    number_handled_object = @number_handled.new
-
-    number_handled_object.office_phone = phone_number
-    number_handled_object.home_phone   = phone_number
+    number_handled_object = @number_handled.new(:office_phone => phone_number, :home_phone => phone_number)
 
     assert_equal(number_handled_object.office_phone, sanitized_phone_number)
     assert_equal(number_handled_object.home_phone,   sanitized_phone_number)
@@ -108,8 +112,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
     number_string = "100 to 500"
     sanitized_number_string = @number_handled.sanitize_number_string(number_string)
 
-    number_handled_object = @number_handled.new
-    number_handled_object.price = number_string
+    number_handled_object = @number_handled.new(:price => number_string)
 
     assert_equal(number_handled_object.price, sanitized_number_string)
   end
@@ -120,8 +123,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
     price        = 100
     dollar_value = 1.00
 
-    number_handled_object = @number_handled.new
-    number_handled_object.price = price
+    number_handled_object = @number_handled.new(:price => price)
 
     assert_equal(number_handled_object.price_dollars, dollar_value)
   end
@@ -132,8 +134,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
     price        = 100
     dollar_value = 1.00
 
-    number_handled_object = @number_handled.new
-    number_handled_object.price_dollars = dollar_value
+    number_handled_object = @number_handled.new(:price_dollars => dollar_value)
 
     assert_equal(number_handled_object.price, price)
   end
@@ -144,8 +145,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
     price_cents  = 100
     dollar_value = 1.00
 
-    number_handled_object = @number_handled.new
-    number_handled_object.price_cents = price_cents
+    number_handled_object = @number_handled.new(:price_cents => price_cents)
 
     assert_equal(number_handled_object.price, dollar_value)
   end
@@ -156,8 +156,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
     price_cents  = 100
     dollar_value = 1.00
 
-    number_handled_object = @number_handled.new
-    number_handled_object.price = dollar_value
+    number_handled_object = @number_handled.new(:price => dollar_value)
 
     assert_equal(number_handled_object.price_cents, price_cents)
   end
@@ -169,8 +168,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
 
     date = Date.today
 
-    number_handled_object = @number_handled.new
-    number_handled_object.test_date = date
+    number_handled_object = @number_handled.new(:test_date => date)
 
     assert_equal(number_handled_object.test_date, date)
   end
@@ -180,8 +178,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
 
     date = Date.parse("May 31, 2013")
 
-    number_handled_object = @number_handled.new
-    number_handled_object.test_date = "05/31/2013"
+    number_handled_object = @number_handled.new(:test_date => "05/31/2013")
 
     assert_equal(number_handled_object.test_date, date)
   end
@@ -191,8 +188,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
 
     date = Date.parse("May 31, 2013")
 
-    number_handled_object = @number_handled.new
-    number_handled_object.test_date = "05-31, 2013"
+    number_handled_object = @number_handled.new(:test_date => "05-31, 2013")
 
     assert_equal(number_handled_object.test_date, date)
   end
