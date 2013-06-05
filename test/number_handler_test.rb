@@ -7,7 +7,7 @@ class NumberHandlerTest < ActiveSupport::TestCase
     @number_handled = Class.new do
       include RealHqShared::NumberHandler
 
-      attr_accessor :office_phone, :home_phone, :price, :price_dollars, :price_cents
+      attr_accessor :office_phone, :home_phone, :price, :price_cents, :test_date
 
       def []=(attribute, value)
         instance_variable_set("@#{attribute}", value)
@@ -113,5 +113,88 @@ class NumberHandlerTest < ActiveSupport::TestCase
     number_handled_object.price = number_string
 
     assert_equal(number_handled_object.price, sanitized_number_string)
+  end
+
+  test ".currency_numbers defines a dollar getter method (e.g. price_dollars) from price" do
+    @number_handled.currency_numbers [:price, :cents]
+
+    price        = 100
+    dollar_value = 1.00
+
+    number_handled_object = @number_handled.new
+    number_handled_object.price = price
+
+    assert_equal(number_handled_object.price_dollars, dollar_value)
+  end
+
+  test ".currency_numbers defines a dollar setter method (e.g. price_dollars=) from price" do
+    @number_handled.currency_numbers [:price, :cents]
+
+    price        = 100
+    dollar_value = 1.00
+
+    number_handled_object = @number_handled.new
+    number_handled_object.price_dollars = dollar_value
+
+    assert_equal(number_handled_object.price, price)
+  end
+
+  test ".currency_numbers defines a dollar getter method (e.g. price) from price_cents" do
+    @number_handled.currency_numbers [:price_cents, :cents]
+
+    price_cents  = 100
+    dollar_value = 1.00
+
+    number_handled_object = @number_handled.new
+    number_handled_object.price_cents = price_cents
+
+    assert_equal(number_handled_object.price, dollar_value)
+  end
+
+  test ".currency_numbers defines a dollar setter method (e.g. price=) from price_cents" do
+    @number_handled.currency_numbers [:price_cents, :cents]
+
+    price_cents  = 100
+    dollar_value = 1.00
+
+    number_handled_object = @number_handled.new
+    number_handled_object.price = dollar_value
+
+    assert_equal(number_handled_object.price_cents, price_cents)
+  end
+
+  ## .dates
+
+  test ".dates defines a setter for the attributes that allows you to set a date" do
+    @number_handled.dates :test_date
+
+    date = Date.today
+
+    number_handled_object = @number_handled.new
+    number_handled_object.test_date = date
+
+    assert_equal(number_handled_object.test_date, date)
+  end
+
+  test ".dates defines a setter for the attributes that allows you to set a date using a string formatted like 05/31/2013" do
+    @number_handled.dates :test_date
+
+    date = Date.parse("May 31, 2013")
+
+    number_handled_object = @number_handled.new
+    number_handled_object.test_date = "05/31/2013"
+
+    assert_equal(number_handled_object.test_date, date)
+  end
+
+  test ".dates defines a setter for the attributes that allows you to set a date using a custom format" do
+    @number_handled.dates :test_date, :format => "%m-%d, %Y"
+
+    date = Date.parse("May 31, 2013")
+
+    number_handled_object = @number_handled.new
+    number_handled_object.test_date = "05-31, 2013"
+
+    assert_equal(number_handled_object.test_date, date)
   end
 end
